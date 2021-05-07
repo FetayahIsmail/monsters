@@ -1,25 +1,30 @@
-import logo from './logo.svg';
+import React,{Component} from 'react';
 import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import Cards from './components/cards/cards';
+import Search from './components/search/search'
+class App extends Component {
+  state = { 
+    monsters:[],
+    serarchText:''
+   }
+   componentDidMount() {
+     fetch('http://jsonplaceholder.typicode.com/users')
+     .then(response=>response.json())
+     .then(user=>this.setState({monsters:user}))
+   }
+   handelChange = (e)=>{
+    this.setState({serarchText:e.target.value})
+   }
+  render() { 
+    const {monsters,serarchText} = this.state
+    const filter = monsters.filter(e=>e.name.toLowerCase().includes(serarchText.toLowerCase()))
+    return ( 
+      <div className="containers">
+        <Search change = {this.handelChange} />
+        <Cards monsters={filter} />
+        </div>
+     )
+  }
 }
-
+ 
 export default App;
